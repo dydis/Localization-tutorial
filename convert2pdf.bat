@@ -1,0 +1,1 @@
+pandoc --listings -H resources\tex\listings-setup.tex --toc -s -V geometry:margin=1in -o Localization-Report.pdf "Localization-course.md"
