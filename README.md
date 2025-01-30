@@ -7,6 +7,7 @@ Env:
 - Python 3.6.5
 
 TODO
+- [ ] Make sections and titles homogeneous through the document
 - [ ] Test Matlab codes included in the report
 - [ ] Test Python codes included in the report
 - [ ] Add NIS and NEES KPIs to EKF evaluation codes
