@@ -2,7 +2,6 @@
 title: "Localization for Autonomous Driving"
 date: 30 Jan 2025
 author: "Prepared by OEI"
-mainfont: Robot Light
 fontsize: 12pt
 documentclass: report
 output:
