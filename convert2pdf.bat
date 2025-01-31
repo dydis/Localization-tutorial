@@ -10,7 +10,7 @@ if %ERRORLEVEL% neq 0 (
 )
 
 :: Set directories
-set "input_dir=markdown-documents"
+set "input_dir=sources"
 set "output_dir=pdf_output"
 set "listings_file=resources\tex\listings-2.tex"
 
@@ -44,7 +44,7 @@ for %%F in ("%input_dir%\*.md") do (
     set "output_file=%output_dir%\%%~nF.pdf"
     
     :: Convert markdown to PDF using pandoc with listings
-    pandoc "%%F" -o "!output_file!" ^
+    pandoc -s "%%F" -o "!output_file!" ^
         --pdf-engine=xelatex ^
         -V geometry:margin=1in ^
         -V papersize=a4 ^
