@@ -7,7 +7,7 @@
 - Python 3.6.5
 
 # TODO
-- [ ] Make sections and titles homogeneous through the document
+- [-] Make sections and titles homogeneous through the document
 - [ ] Seperate the report into different markdown documents
 - [ ] Test Matlab codes included in the report
 - [ ] Test Python codes included in the report
@@ -18,7 +18,6 @@
 - [x] Optimized PDF generation script
 - [ ] Add some bibliography
 - [ ] Check PDF conversion for Linux and Mac users
-
 
 # Resources
 - [Markdown Cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)

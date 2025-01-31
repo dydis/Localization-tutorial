@@ -1,0 +1,26 @@
+---
+pagetitle: Localization for Autonomous Driving
+title: Localization for Autonomous Driving
+subtitle: Brief tutorial to have fun with localization
+author: 
+- "Prepared by Oussama"
+- "Code by Claude.ai"
+date: January 2025
+keywords: [Autonomous Driving, Robotics, Machine Learning, Kalman Filtering, Particle Filtering, Localization]
+eqnPrefix:
+  - "Equation"
+  - "Equations"
+figPrefix:
+  - "Figure"
+  - "Figures"
+secPrefix:
+  - "Section"
+  - "Sections"
+tblPrefix:
+  - "Table"
+  - "Tables"
+lstPrefix:
+  - "Listing"
+  - "Listings"
+codeBlockCaptions: true
+---
