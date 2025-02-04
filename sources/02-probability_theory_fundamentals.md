@@ -1,13 +1,5 @@
 # Probability Theory Foundations
 
-- [ ] Probability Theory Foundations
-    - [x] Random variables and probability distributions
-    - [x] Bayes theorem
-    - [ ] Conditional probability
-    - [ ] Markov assumption
-    - [ ] Joint and marginal probabilities
-    - [ ] Gaussian distributions
-
 ## Random variables and probability distributions
 ### Random Variables
 
@@ -27,20 +19,23 @@ A probability distribution describes how likely each possible value of a random 
 
 For discrete random variables, we use a Probability Mass Function (PMF). The PMF gives the probability of each possible value directly. For example, if we're counting landmarks:
 
-P(X = 0) = 0.1  (10% chance of seeing no landmarks)
-P(X = 1) = 0.3  (30% chance of seeing exactly one landmark)
-P(X = 2) = 0.4  (40% chance of seeing exactly two landmarks)
+- P(X = 0) = 0.1  (10% chance of seeing no landmarks)
+- P(X = 1) = 0.3  (30% chance of seeing exactly one landmark)
+- P(X = 2) = 0.4  (40% chance of seeing exactly two landmarks)
+
 And so on...
 
 For continuous random variables, we use a Probability Density Function (PDF). The PDF works differently because with continuous variables, the probability of getting any exact value is actually zero! Instead, the PDF gives us the relative likelihood of values occurring, and we integrate it over ranges to get probabilities.
 
 The most important continuous probability distribution in robotics is the Gaussian (or Normal) distribution. It's defined by two parameters:
+
 - μ (mu): the mean, representing the central value
 - σ (sigma): the standard deviation, representing the spread
 
 The Gaussian distribution appears naturally in many robotics scenarios because of the Central Limit Theorem. When many small random effects add up - like multiple sources of sensor noise - their combined effect tends to follow a Gaussian distribution.
 
 In the context of localization, probability distributions help us represent:
+
 1. The robot's belief about its position (often as a Gaussian in simple cases)
 2. Uncertainty in sensor measurements
 3. Noise in motion commands and their execution
@@ -101,4 +96,62 @@ In robotics, we use this process continuously. Every time we:
 
 This is the foundation of probabilistic robotics and the basis for algorithms like Kalman filters and particle filters, which we'll explore later.
 
-Would you like me to explain more about how we use this in practice, or would you like to explore any part of this explanation in more detail?
+## Conditional probability
+
+Think of probability as measuring how likely something is to happen. Now, conditional probability takes this a step further by asking: "How likely is this event to happen, given that we already know something else has happened?" 
+
+The formal notation for conditional probability is P(A|B), which reads as "the probability of A given B." Mathematically, it's expressed as:
+
+P(A|B) = P(A ∩ B) / P(B)
+
+Let's break this down with a real-world example. Imagine we have a deck of 52 playing cards, and we want to know the probability of drawing a king, given that we've already drawn a red card.
+
+To solve this:
+
+1. First, we identify what we know: we've drawn a red card (this is our condition B)
+
+2. We want to find the probability of having a king among these red cards (this is our event A)
+
+3. P(B) = probability of drawing a red card = 26/52 = 1/2
+
+4. P(A ∩ B) = probability of drawing a red king = 2/52 = 1/26
+
+5. Therefore, P(A|B) = (2/52)/(26/52) = 2/26 = 1/13
+
+This shows us something interesting: while the probability of drawing a king from the full deck is 4/52 (about 0.077), the probability of drawing a king given that we know the card is red is 1/13 (about 0.077). In this case, knowing the card is red didn't change the probability of it being a king, because kings are evenly distributed between red and black cards.
+
+This leads us to an important concept: independence. If knowing one event doesn't affect the probability of another event, we say these events are independent. In such cases, P(A|B) = P(A). However, in many real-world scenarios, events are dependent, and conditional probability helps us account for this dependency.
+
+Consider a medical example: the probability of having a certain disease might be 1% in the general population, but if we know a person has a specific symptom, the conditional probability of having the disease given this symptom might be much higher, say 30%. This is why doctors use symptoms to update their diagnostic probabilities.
+
+## Markov assumption
+
+The Markov assumption, also known as the Markov property, is a fundamental concept in probability theory that helps us model complex sequences of events in a manageable way. Let me break this down step by step.
+
+The core idea of the Markov assumption is that the future state of a system depends only on its present state, not on its past states. In probability terms, this means that if we want to predict what happens next, we only need to know what's happening right now, not the entire history of what happened before.
+
+To understand this more concretely, imagine you're watching the weather. A pure Markov process would say that tomorrow's weather only depends on today's weather, not on what the weather was like last week or last month. While this might seem like an oversimplification (and in reality, weather patterns are more complex), this assumption often proves surprisingly useful in many real-world applications.
+
+Let's express this mathematically. For a sequence of events X₁, X₂, X₃, ..., Xₙ, the Markov property states that:
+
+P(Xₙ₊₁ | Xₙ, Xₙ₋₁, ..., X₁) = P(Xₙ₊₁ | Xₙ)
+
+This equation tells us that the probability of the next state (Xₙ₊₁) given all previous states is equal to the probability of the next state given just the current state (Xₙ). This dramatically simplifies our calculations while still capturing many important patterns in real-world processes.
+
+Think of it like playing a game of chess. While each position arose from a long sequence of moves, a player really only needs to look at the current board position to decide their next move. The specific sequence of moves that led to this position, while interesting historically, isn't directly relevant to choosing the next best move.
+
+The Markov assumption is particularly powerful because it allows us to build practical models of complex systems. It's used in:
+
+1. Natural Language Processing - In simple language models, the probability of the next word might depend only on the current word (or last few words), not the entire sentence history.
+
+2. Financial Markets - Some basic models assume that tomorrow's stock price depends only on today's price, not the entire price history.
+
+3. Biology - Gene sequences can be modeled using Markov chains, where each base pair depends only on the previous few pairs.
+
+4. Machine Learning - Hidden Markov Models use this property to model sequential data in a computationally efficient way.
+
+It's important to note that the Markov assumption comes in different "orders." What I've described is a first-order Markov process, where we only look at the immediate previous state. In a second-order Markov process, we look at the last two states, and so on. Higher-order Markov processes can capture more complex dependencies but require more computational resources.
+
+This assumption, while powerful, isn't always perfectly accurate in real-world situations. Many processes have longer-term dependencies that a simple Markov model might miss. However, the simplification it provides often outweighs these limitations, making it an invaluable tool in probability theory and its applications.
+
+

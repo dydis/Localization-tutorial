@@ -8,7 +8,7 @@
 
 # TODO
 - [-] Make sections and titles homogeneous through the document
-- [ ] Seperate the report into different markdown documents
+- [x] Seperate the report into different markdown documents
 - [ ] Test Matlab codes included in the report
 - [ ] Test Python codes included in the report
 - [ ] Add NIS and NEES KPIs to EKF evaluation codes

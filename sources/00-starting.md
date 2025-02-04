@@ -116,17 +116,17 @@ Benguerir   99%     65498       256,54          565656      5489        2454
 # Course chapters {.unnumbered}
 Section to be deleted after completion of the couse
 
-- [ ] Introduction to Localization
-    - [ ] Problem statement and motivation
-    - [ ] Types of localization problems
-    - [ ] State estimation challenges
-    - [ ] Sensor types and characteristics
-    - [ ] Sources of uncertainty in robotics
-- [ ] Probability Theory Foundations
-    - [ ] Random variables and probability distributions
-    - [ ] Bayes' theorem
-    - [ ] Conditional probability
-    - [ ] Markov assumption
+- [x] Introduction to Localization
+    - [x] Problem statement and motivation
+    - [x] Types of localization problems
+    - [x] State estimation challenges
+    - [x] Sensor types and characteristics
+    - [x] Sources of uncertainty in robotics
+- [x] Probability Theory Foundations
+    - [x] Random variables and probability distributions
+    - [x] Bayes' theorem
+    - [-] Conditional probability
+    - [-] Markov assumption
     - [ ] Joint and marginal probabilities
     - [ ] Gaussian distributions
 - [ ] Bayesian Filtering Framework
