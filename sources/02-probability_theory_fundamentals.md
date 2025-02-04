@@ -158,42 +158,92 @@ This assumption, while powerful, isn't always perfectly accurate in real-world s
 
 Let me explain joint and marginal probabilities through an intuitive progression, starting with the fundamentals and building up to how they work together.
 
-Joint probability represents the likelihood of two (or more) events occurring together. We write this as P(A,B) or P(A∩B), which reads as "the probability of A and B happening." Think of it as the overlap in a Venn diagram - the space where both events occur simultaneously.
+Joint probability represents the likelihood of two (or more) events occurring together. We write this as $P(A,B)$ or $P(A∩B)$, which reads as "the probability of A and B happening." Think of it as the overlap in a Venn diagram - the space where both events occur simultaneously.
 
 Let's make this concrete with an example. Imagine we're looking at weather data for a year. Let's consider two events:
-- Event A: It's a cold day (temperature below 50°F)
-- Event B: It's a rainy day
 
-The joint probability P(A,B) would tell us the probability that a randomly chosen day is both cold AND rainy. If 73 days out of 365 were both cold and rainy, the joint probability would be 73/365 = 0.2, or 20%.
+- Event $A$: It's a cold day (temperature below $50°F$)
+- Event $B$: It's a rainy day
+
+The joint probability $P(A,B)$ would tell us the probability that a randomly chosen day is both cold AND rainy. If 73 days out of 365 were both cold and rainy, the joint probability would be 73/365 = 0.2, or 20%.
 
 Now, marginal probability is what we get when we're interested in the probability of just one event, regardless of what happens with other events. It's called "marginal" because historically, these probabilities were written in the margins of probability tables. If we look at our weather example:
-- P(A) : The probability of a cold day, regardless of rain
-- P(B) : The probability of a rainy day, regardless of temperature
+
+- $P(A)$ : The probability of a cold day, regardless of rain
+- $P(B)$ : The probability of a rainy day, regardless of temperature
 
 Here's where these concepts connect: marginal probabilities can be calculated by summing up joint probabilities. Mathematically:
-P(A) = P(A,B) + P(A,not B)
+
+$$P(A) = P(A,B) + P(A,not B)$$
 
 In our weather example, if:
-- 73 days were cold and rainy: P(A,B) = 0.2
-- 109 days were cold and not rainy: P(A,not B) = 0.3
-Then the marginal probability of a cold day P(A) = 0.2 + 0.3 = 0.5, or 50% of days
+
+- 73 days were cold and rainy: $P(A,B) = 0.2$
+- 109 days were cold and not rainy: $P(A,not B) = 0.3$
+
+Then the marginal probability of a cold day $P(A) = 0.2 + 0.3 = 0.5$, or 50% of days. 
 
 We can visualize this with a probability table:
-```
-                Rainy (B)    Not Rainy    Marginal
-Cold (A)          0.2          0.3         0.5
-Not Cold          0.1          0.4         0.5
-Marginal          0.3          0.7         1.0
-```
+
+|    | Rainy (B) | Not Rainy | Marginal |
+|:---|:---:|:---:|:---:|
+| Cold (A) | 0.2 | 0.3 | 0.5 |
+| Not Cold | 0.1 | 0.4 | 0.5 |
+| Marginal | 0.3 | 0.7 | 1.0 |
+
+: Joint and Marginal Probabilities of Cold and Rainy Days. The sum of all joint probabilities equals 1, representing all possible weather combinations. []{short-caption="Joint and Marginal Probabilities of Cold and Rainy Days"}
 
 Each cell shows a joint probability, and the margins show marginal probabilities. Notice how the marginals sum up the joint probabilities in their respective rows or columns.
 
 This relationship between joint and marginal probabilities becomes especially important when working with conditional probabilities. Remember our earlier discussion about conditional probability? We can express it using joint and marginal probabilities:
 
-P(A|B) = P(A,B) / P(B)
+$$P(A|B) = P(A,B) / P(B)$$
 
 This shows how these concepts are deeply interconnected: joint probabilities help us calculate marginal probabilities, which in turn help us work with conditional probabilities.
 
 Understanding these relationships is crucial in many real-world applications, from medical diagnosis (where we might look at joint probabilities of symptoms and diseases) to market analysis (examining the relationship between customer demographics and purchasing behaviors).
 
-Would you like to explore a specific application of these concepts, or shall we delve deeper into how they relate to other fundamental probability concepts?
+## Gaussian distributions
+
+We will dive into Gaussian distributions, also known as normal distributions, by building up from their fundamental characteristics to their broader significance in probability theory.
+
+The Gaussian distribution is perhaps nature's most remarkable probability distribution. Picture a perfectly symmetrical bell-shaped curve - this is the visual signature of a Gaussian distribution. But why is this shape so special and ubiquitous?
+
+At its core, a Gaussian distribution is defined by two key parameters:
+
+1. The mean $(μ)$ - the center point of the distribution, representing the average value
+2. The standard deviation $(σ)$ - which determines how spread out the values are from the mean
+
+The mathematical formula for a Gaussian distribution is:
+
+$$ \scalebox{5}{f(x)=\frac{1}{\sigma \sqrt{2\pi}}e^{-\frac{1}{2}(\frac{x-\mu }{\sigma})^2}}$$
+
+While this formula might look intimidating, we can understand its behavior through some key properties:
+
+First, consider symmetry. The distribution is perfectly symmetrical around its mean, meaning values equally far above and below the mean are equally likely. This reflects many natural phenomena - for instance, human height variations around the average height.
+
+Second, the "$68-95-99.7$ rule" tells us something remarkable about how probability is distributed:
+
+- About 68% of values fall within one standard deviation of the mean
+- About 95% fall within two standard deviations
+- About 99.7% fall within three standard deviations
+
+This leads us to an important insight: extreme values become exponentially less likely as we move away from the mean. Think about human height - while it's common to meet someone 2 inches taller than average, it's extremely rare to meet someone 12 inches taller.
+
+The Gaussian distribution emerges naturally in many situations due to the Central Limit Theorem, which tells us that when we add up many independent random variables, their sum tends to follow a Gaussian distribution, regardless of the underlying distributions of the individual variables. This explains why we see Gaussian distributions so often in nature - many natural phenomena are the result of multiple small, independent effects adding together.
+
+Let's consider some practical examples:
+
+- Measurement Error: When scientists make repeated measurements of the same quantity, the errors typically follow a Gaussian distribution
+- Financial Returns: Daily stock market returns often approximately follow a Gaussian distribution
+- Biological Variations: Things like height, weight, and blood pressure in a population often follow roughly Gaussian distributions
+
+Understanding Gaussian distributions is crucial for:
+
+1. Statistical Testing: Many statistical tests assume underlying Gaussian distributions
+2. Quality Control: Manufacturing processes often use Gaussian assumptions to set acceptable tolerance limits
+3. Risk Analysis: Financial models frequently use Gaussian distributions to model market behavior
+4. Machine Learning: Many algorithms assume Gaussian noise in their models
+
+There's an interesting connection to earlier concepts we discussed: conditional probabilities involving Gaussian distributions have special properties. If you have two variables that follow a joint Gaussian distribution, the conditional distribution of one given the other is also Gaussian - a property that makes these distributions particularly useful in prediction problems.
+

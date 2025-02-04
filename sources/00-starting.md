@@ -127,8 +127,8 @@ Section to be deleted after completion of the couse
     - [x] Bayes' theorem
     - [x] Conditional probability
     - [x] Markov assumption
-    - [-] Joint and marginal probabilities
-    - [ ] Gaussian distributions
+    - [x] Joint and marginal probabilities
+    - [x] Gaussian distributions
 - [ ] Bayesian Filtering Framework
     - [ ] Recursive state estimation
     - [ ] Prediction step (motion model)
