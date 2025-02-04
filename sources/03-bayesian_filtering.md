@@ -250,3 +250,143 @@ In practical applications, we often can't solve the integral analytically. This 
 - Particle filters use numerical sampling
 - Grid-based methods discretize the state space
 
+## Bayes filter algorithm
+
+The Bayes filter is a probabilistic approach to estimating the state of a dynamic system over time using noisy measurements. Think of it as a mathematical framework for maintaining an educated guess about what's happening in a system, constantly refining that guess as new information arrives.
+
+The core principle rests on maintaining a belief state - a probability distribution over all possible states. This belief state represents our uncertainty about the true state of the system. Let's break down how this works through the two main steps that occur recursively:
+
+The Prediction Step (Time Update):
+In this first phase, we predict how our system will evolve based on our understanding of its dynamics. Imagine tracking a flying drone - even without looking at it, we can predict where it should be based on physics and our last known information about its position and velocity. This step uses the Chapman-Kolmogorov equation we discussed earlier:
+
+$$p(xₖ|z₁:ₖ₋₁) = ∫ p(xₖ|xₖ₋₁)p(xₖ₋₁|z₁:ₖ₋₁)dxₖ₋₁$$
+
+This equation tells us to consider all possible previous states and how they might evolve into current states. The result is a prediction that accounts for all uncertainties in the system's dynamics.
+
+The Correction Step (Measurement Update):
+When we get new sensor information, we update our prediction using Bayes' rule:
+
+$$p(xₖ|z₁:ₖ) = η p(zₖ|xₖ)p(xₖ|z₁:ₖ₋₁)$$
+
+Here, we're weighing our prediction against new evidence, much like a detective updating their theory based on new clues.
+
+Let's make this concrete with an example of a self-driving car:
+
+Starting State:
+
+- The car believes it's at a certain position with some uncertainty
+- This belief is represented as a probability distribution over possible positions
+
+Prediction Phase:
+
+- The car knows it's moving forward at 30 mph
+- Using this information and basic physics, it predicts where it should be after a small time interval
+- The uncertainty grows during this prediction (the car might be sliding slightly, or its speedometer might be imperfect)
+
+Measurement Phase:
+
+- The car's GPS provides a new position reading
+- The car's cameras detect lane markers
+- These measurements are combined with the prediction to form an updated belief
+- The uncertainty typically decreases during this phase as new evidence arrives
+
+The beauty of the Bayes filter lies in how it handles uncertainty:
+
+- If sensors are very accurate, their measurements are weighted more heavily
+- If the motion is very predictable, the predictions are trusted more
+- The algorithm automatically balances these factors based on their relative uncertainties
+
+Real-world implementations often make specific assumptions about the nature of uncertainties and system dynamics. The most famous variant is the Kalman filter, which assumes:
+
+- Linear system dynamics
+- Gaussian uncertainties
+- Additive noise
+
+However, the general Bayes filter framework can handle non-linear systems and non-Gaussian uncertainties through variants like:
+
+- Extended Kalman Filter: Handles mild non-linearities through linearization
+- Unscented Kalman Filter: Better handles non-linear systems
+- Particle Filter: Can handle any type of uncertainty or dynamics
+
+## Linear vs nonlinear systems
+
+In the context of state estimation, a system's linearity or nonlinearity affects how states evolve over time and how measurements relate to states. This distinction is crucial because it determines which filtering approaches we can use effectively.
+
+### Linear Systems
+A system is linear if it satisfies two key properties: superposition and homogeneity. In state estimation terms, this means:
+
+For the motion model, a linear system follows the form:
+$$x(k+1) = Ax(k) + Bu(k) + w(k)$$
+
+Where:
+
+- A is the state transition matrix
+- B is the control input matrix
+- w(k) is process noise
+- All relationships between variables are strictly linear
+
+For the measurement model, linearity means:
+$$z(k) = Hx(k) + v(k)$$
+
+Where:
+
+- H is the measurement matrix
+- v(k) is measurement noise
+
+Consider tracking a train moving along a straight track at constant speed. This is approximately linear because:
+
+- Position changes linearly with time
+- Velocity remains constant
+- Measurements (like position from track sensors) are directly proportional to state
+
+### Nonlinear Systems
+Real-world systems are often nonlinear. The state evolution or measurements might involve:
+
+- Trigonometric functions
+- Quadratic terms
+- Products of state variables
+- Any other nonlinear mathematical relationships
+
+The general form becomes:
+
+$$
+\begin{aligned}
+x(k+1) &= f(x(k), u(k)) + w(k) \\
+z(k) &= h(x(k)) + v(k)\\
+\end{aligned}
+$$
+
+Where f() and h() are nonlinear functions.
+
+Consider tracking an aircraft:
+
+- Position updates involve trigonometric functions of orientation
+- Aerodynamic forces are quadratic with velocity
+- Radar measurements give range and bearing, requiring nonlinear conversions to Cartesian coordinates
+
+The implications for filtering are profound:
+
+For Linear Systems:
+
+- The Kalman Filter provides an optimal solution
+- Uncertainties remain Gaussian if noise is Gaussian
+- Computations are relatively simple and fast
+- Results are guaranteed to converge under certain conditions
+
+For Nonlinear Systems:
+
+- The basic Kalman Filter no longer works optimally
+- Uncertainties may become non-Gaussian even with Gaussian noise
+- We need more sophisticated approaches:
+  - Extended Kalman Filter (EKF): Linearizes around current estimate
+  - Unscented Kalman Filter (UKF): Uses carefully chosen sample points
+  - Particle Filter: Represents uncertainty with discrete particles
+
+Let's consider a specific example: a pendulum.
+
+- Linear approximation works when swing angle is small (sin(θ) ≈ θ)
+- As swing amplitude increases, nonlinear effects become important
+- The true motion involves trigonometric functions of angle
+
+This demonstrates how real systems might be approximated as linear within certain operating ranges but require nonlinear treatment for full accuracy.
+

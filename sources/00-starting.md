@@ -134,8 +134,8 @@ Section to be deleted after completion of the couse
     - [x] Prediction step (motion model)
     - [x] Update step (measurement model)
     - [x] Chapman-Kolmogorov equation
-    - [ ] Bayes filter algorithm
-    - [ ] Linear vs nonlinear systems
+    - [x] Bayes filter algorithm
+    - [x] Linear vs nonlinear systems
 - [ ] Kalman Filtering
     - [ ] Linear Kalman Filter
         - [ ] System model and assumptions
