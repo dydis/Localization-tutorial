@@ -130,9 +130,9 @@ Section to be deleted after completion of the couse
     - [x] Joint and marginal probabilities
     - [x] Gaussian distributions
 - [ ] Bayesian Filtering Framework
-    - [ ] Recursive state estimation
-    - [ ] Prediction step (motion model)
-    - [ ] Update step (measurement model)
+    - [x] Recursive state estimation
+    - [x] Prediction step (motion model)
+    - [x] Update step (measurement model)
     - [ ] Chapman-Kolmogorov equation
     - [ ] Bayes filter algorithm
     - [ ] Linear vs nonlinear systems
