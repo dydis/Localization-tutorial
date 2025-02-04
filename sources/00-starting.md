@@ -133,7 +133,7 @@ Section to be deleted after completion of the couse
     - [x] Recursive state estimation
     - [x] Prediction step (motion model)
     - [x] Update step (measurement model)
-    - [ ] Chapman-Kolmogorov equation
+    - [x] Chapman-Kolmogorov equation
     - [ ] Bayes filter algorithm
     - [ ] Linear vs nonlinear systems
 - [ ] Kalman Filtering

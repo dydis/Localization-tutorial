@@ -246,4 +246,3 @@ Understanding Gaussian distributions is crucial for:
 4. Machine Learning: Many algorithms assume Gaussian noise in their models
 
 There's an interesting connection to earlier concepts we discussed: conditional probabilities involving Gaussian distributions have special properties. If you have two variables that follow a joint Gaussian distribution, the conditional distribution of one given the other is also Gaussian - a property that makes these distributions particularly useful in prediction problems.
-

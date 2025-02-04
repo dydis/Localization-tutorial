@@ -191,3 +191,62 @@ $$
 
 where $\sigma_{x}$ and $\sigma_{y}$ represent our uncertainty in x and y measurements.
 
+## Chapman-Kolmogorov equation
+
+The Chapman-Kolmogorov equation is a fundamental concept in probability theory and plays a crucial role in state estimation. This equation describes how probability distributions evolve over time in a Markov process.
+
+The Chapman-Kolmogorov equation is mathematically expressed as:
+
+$$p(x_{k+1}|z_{1:k}) = \int p(x_{k+1}|x_{k})p(x_{k}|z_{1:k})dx_{k}$$
+
+Think of this equation as describing how we can "step forward" in time with our probability distributions. Let's break down what each part means and why it's important.
+
+The left side, $p(x_{k+1}|z_{1:k})$, represents our prediction of the state at time k+1, given all measurements up to time k. This is what we want to calculate.
+
+On the right side, we have two key components:
+
+1. $p(x_{k+1}|x_{k})$ is our motion model - how the state evolves from one time step to the next
+2. $p(x_{k}|z_{1:k})$ is our current belief about the state at time k
+
+The integral combines these components across all possible current states. It's like considering every possible current state, figuring out where it might lead, and weighting those possibilities by how likely we think each current state is.
+
+Let's make this concrete with an example. Imagine tracking a car on a one-dimensional road:
+
+- Current position is xₖ
+- Future position is xₖ₊₁
+- We have some uncertainty about both
+
+The Chapman-Kolmogorov equation tells us to:
+
+1. Consider each possible current position
+2. For each current position, consider all possible future positions
+3. Weight each possibility by how likely we think it is
+4. Sum up all these weighted possibilities
+
+This process naturally handles uncertainty propagation. If we're very uncertain about the current state, this uncertainty will be reflected in our prediction through the integration process.
+
+The equation becomes particularly elegant when working with Gaussian distributions. In this case, if:
+
+- Current belief is Gaussian with mean $\mu_k$ and variance $\sigma_k^2$
+- Motion model is Gaussian with mean shift $\delta$ and variance $\tau^2$
+
+Then the prediction will also be Gaussian with:
+
+- Mean: $\mu_{k+1} = \mu_k + \delta$
+- Variance: $\sigma_{k+1}^2 = \sigma_k^2 + \tau^2$
+
+This shows how uncertainties add up as we make predictions further into the future.
+
+The Chapman-Kolmogorov equation is particularly important because:
+
+1. It forms the theoretical foundation for the prediction step in Bayesian filtering
+2. It respects the Markov property we discussed earlier
+3. It provides a mathematically rigorous way to propagate uncertainties
+4. It connects continuous and discrete-time processes
+
+In practical applications, we often can't solve the integral analytically. This leads to various approximation methods:
+
+- Kalman filters use Gaussian approximations
+- Particle filters use numerical sampling
+- Grid-based methods discretize the state space
+
