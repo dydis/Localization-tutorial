@@ -216,7 +216,7 @@ At its core, a Gaussian distribution is defined by two key parameters:
 
 The mathematical formula for a Gaussian distribution is:
 
-$$ \scalebox{5}{f(x)=\frac{1}{\sigma \sqrt{2\pi}}e^{-\frac{1}{2}(\frac{x-\mu }{\sigma})^2}}$$
+$$ f(x)=\frac{1}{\sigma \sqrt{2\pi}}e^{-\frac{1}{2}(\frac{x-\mu }{\sigma})^2}$$
 
 While this formula might look intimidating, we can understand its behavior through some key properties:
 
