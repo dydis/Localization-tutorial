@@ -125,9 +125,9 @@ Section to be deleted after completion of the couse
 - [x] Probability Theory Foundations
     - [x] Random variables and probability distributions
     - [x] Bayes' theorem
-    - [-] Conditional probability
-    - [-] Markov assumption
-    - [ ] Joint and marginal probabilities
+    - [x] Conditional probability
+    - [x] Markov assumption
+    - [-] Joint and marginal probabilities
     - [ ] Gaussian distributions
 - [ ] Bayesian Filtering Framework
     - [ ] Recursive state estimation

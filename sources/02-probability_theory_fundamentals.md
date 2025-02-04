@@ -100,9 +100,9 @@ This is the foundation of probabilistic robotics and the basis for algorithms li
 
 Think of probability as measuring how likely something is to happen. Now, conditional probability takes this a step further by asking: "How likely is this event to happen, given that we already know something else has happened?" 
 
-The formal notation for conditional probability is P(A|B), which reads as "the probability of A given B." Mathematically, it's expressed as:
+The formal notation for conditional probability is $P(A|B)$, which reads as "the probability of A given B." Mathematically, it's expressed as:
 
-P(A|B) = P(A ∩ B) / P(B)
+$P(A|B) = P(A \cap B) / P(B)$
 
 Let's break this down with a real-world example. Imagine we have a deck of 52 playing cards, and we want to know the probability of drawing a king, given that we've already drawn a red card.
 
@@ -112,15 +112,15 @@ To solve this:
 
 2. We want to find the probability of having a king among these red cards (this is our event A)
 
-3. P(B) = probability of drawing a red card = 26/52 = 1/2
+3. $P(B)$ = probability of drawing a red card $= 26/52 = 1/2$
 
-4. P(A ∩ B) = probability of drawing a red king = 2/52 = 1/26
+4. $P(A ∩ B)$ = probability of drawing a red king $= 2/52 = 1/26$
 
-5. Therefore, P(A|B) = (2/52)/(26/52) = 2/26 = 1/13
+5. Therefore, $P(A|B) = (2/52)/(26/52) = 2/26 = 1/13$
 
 This shows us something interesting: while the probability of drawing a king from the full deck is 4/52 (about 0.077), the probability of drawing a king given that we know the card is red is 1/13 (about 0.077). In this case, knowing the card is red didn't change the probability of it being a king, because kings are evenly distributed between red and black cards.
 
-This leads us to an important concept: independence. If knowing one event doesn't affect the probability of another event, we say these events are independent. In such cases, P(A|B) = P(A). However, in many real-world scenarios, events are dependent, and conditional probability helps us account for this dependency.
+This leads us to an important concept: independence. If knowing one event doesn't affect the probability of another event, we say these events are independent. In such cases, $P(A|B) = P(A)$. However, in many real-world scenarios, events are dependent, and conditional probability helps us account for this dependency.
 
 Consider a medical example: the probability of having a certain disease might be 1% in the general population, but if we know a person has a specific symptom, the conditional probability of having the disease given this symptom might be much higher, say 30%. This is why doctors use symptoms to update their diagnostic probabilities.
 
@@ -132,11 +132,11 @@ The core idea of the Markov assumption is that the future state of a system depe
 
 To understand this more concretely, imagine you're watching the weather. A pure Markov process would say that tomorrow's weather only depends on today's weather, not on what the weather was like last week or last month. While this might seem like an oversimplification (and in reality, weather patterns are more complex), this assumption often proves surprisingly useful in many real-world applications.
 
-Let's express this mathematically. For a sequence of events X₁, X₂, X₃, ..., Xₙ, the Markov property states that:
+Let's express this mathematically. For a sequence of events $X₁, X₂, X₃, ..., Xₙ$ the Markov property states that:
 
-P(Xₙ₊₁ | Xₙ, Xₙ₋₁, ..., X₁) = P(Xₙ₊₁ | Xₙ)
+$$P(Xₙ₊₁ | Xₙ, Xₙ₋₁, ..., X₁) = P(Xₙ₊₁ | Xₙ)$$
 
-This equation tells us that the probability of the next state (Xₙ₊₁) given all previous states is equal to the probability of the next state given just the current state (Xₙ). This dramatically simplifies our calculations while still capturing many important patterns in real-world processes.
+This equation tells us that the probability of the next state $(Xₙ₊₁)$ given all previous states is equal to the probability of the next state given just the current state $(Xₙ)$. This dramatically simplifies our calculations while still capturing many important patterns in real-world processes.
 
 Think of it like playing a game of chess. While each position arose from a long sequence of moves, a player really only needs to look at the current board position to decide their next move. The specific sequence of moves that led to this position, while interesting historically, isn't directly relevant to choosing the next best move.
 
@@ -154,4 +154,46 @@ It's important to note that the Markov assumption comes in different "orders." W
 
 This assumption, while powerful, isn't always perfectly accurate in real-world situations. Many processes have longer-term dependencies that a simple Markov model might miss. However, the simplification it provides often outweighs these limitations, making it an invaluable tool in probability theory and its applications.
 
+## Joint and marginal probabilities
 
+Let me explain joint and marginal probabilities through an intuitive progression, starting with the fundamentals and building up to how they work together.
+
+Joint probability represents the likelihood of two (or more) events occurring together. We write this as P(A,B) or P(A∩B), which reads as "the probability of A and B happening." Think of it as the overlap in a Venn diagram - the space where both events occur simultaneously.
+
+Let's make this concrete with an example. Imagine we're looking at weather data for a year. Let's consider two events:
+- Event A: It's a cold day (temperature below 50°F)
+- Event B: It's a rainy day
+
+The joint probability P(A,B) would tell us the probability that a randomly chosen day is both cold AND rainy. If 73 days out of 365 were both cold and rainy, the joint probability would be 73/365 = 0.2, or 20%.
+
+Now, marginal probability is what we get when we're interested in the probability of just one event, regardless of what happens with other events. It's called "marginal" because historically, these probabilities were written in the margins of probability tables. If we look at our weather example:
+- P(A) : The probability of a cold day, regardless of rain
+- P(B) : The probability of a rainy day, regardless of temperature
+
+Here's where these concepts connect: marginal probabilities can be calculated by summing up joint probabilities. Mathematically:
+P(A) = P(A,B) + P(A,not B)
+
+In our weather example, if:
+- 73 days were cold and rainy: P(A,B) = 0.2
+- 109 days were cold and not rainy: P(A,not B) = 0.3
+Then the marginal probability of a cold day P(A) = 0.2 + 0.3 = 0.5, or 50% of days
+
+We can visualize this with a probability table:
+```
+                Rainy (B)    Not Rainy    Marginal
+Cold (A)          0.2          0.3         0.5
+Not Cold          0.1          0.4         0.5
+Marginal          0.3          0.7         1.0
+```
+
+Each cell shows a joint probability, and the margins show marginal probabilities. Notice how the marginals sum up the joint probabilities in their respective rows or columns.
+
+This relationship between joint and marginal probabilities becomes especially important when working with conditional probabilities. Remember our earlier discussion about conditional probability? We can express it using joint and marginal probabilities:
+
+P(A|B) = P(A,B) / P(B)
+
+This shows how these concepts are deeply interconnected: joint probabilities help us calculate marginal probabilities, which in turn help us work with conditional probabilities.
+
+Understanding these relationships is crucial in many real-world applications, from medical diagnosis (where we might look at joint probabilities of symptoms and diseases) to market analysis (examining the relationship between customer demographics and purchasing behaviors).
+
+Would you like to explore a specific application of these concepts, or shall we delve deeper into how they relate to other fundamental probability concepts?
