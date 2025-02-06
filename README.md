@@ -9,7 +9,7 @@
 # TODO
 - [-] Make sections and titles homogeneous through the document
 - [x] Seperate the report into different markdown documents
-- [ ] Test Matlab codes included in the report
+- [ ] ~~Test Matlab codes included in the report~~
 - [ ] Test Python codes included in the report
 - [ ] Add NIS and NEES KPIs to EKF evaluation codes
 - [ ] Add Particle Diversity KPI to Paricle Filter evaluation code

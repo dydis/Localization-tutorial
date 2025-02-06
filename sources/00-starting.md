@@ -129,23 +129,23 @@ Section to be deleted after completion of the couse
     - [x] Markov assumption
     - [x] Joint and marginal probabilities
     - [x] Gaussian distributions
-- [ ] Bayesian Filtering Framework
+- [x] Bayesian Filtering Framework
     - [x] Recursive state estimation
     - [x] Prediction step (motion model)
     - [x] Update step (measurement model)
     - [x] Chapman-Kolmogorov equation
     - [x] Bayes filter algorithm
     - [x] Linear vs nonlinear systems
-- [ ] Kalman Filtering
-    - [ ] Linear Kalman Filter
-        - [ ] System model and assumptions
-        - [ ] Prediction equations
-        - [ ] Update equations
-        - [ ] Uncertainty propagation
-    - [ ] Extended Kalman Filter (EKF)
-        - [ ] Linearization process
-        - [ ] Jacobian matrices
-        - [ ] Algorithm implementation
+- [-] Kalman Filtering
+    - [x] Linear Kalman Filter
+        - [x] System model and assumptions
+        - [x] Prediction equations
+        - [x] Update equations
+        - [x] Uncertainty propagation
+    - [x] Extended Kalman Filter (EKF)
+        - [x] Linearization process
+        - [x] Jacobian matrices
+        - [x] Algorithm implementation
     - [ ] Unscented Kalman Filter (UKF)
         - [ ] Sigma points
         - [ ] Unscented transform
