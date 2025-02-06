@@ -468,7 +468,7 @@ def verify_jacobian(f, x, dx=1e-6):
 
 Let's create a comprehensive implementation of both Kalman Filter and Extended Kalman Filter with detailed documentation and test scenarios. The key components of this implementation are:
 
-#### Base Classes: {-}
+#### Base Classes {-}
 
 - `KalmanFilterState`: A dataclass to store filter states
 - `KalmanFilter`: Implementation of the linear Kalman filter
@@ -869,6 +869,486 @@ if __name__ == "__main__":
 
 ### Sigma points
 
+The Unscented Kalman Filter (UKF) represents a clever solution to the nonlinear filtering problem. At its heart lies the concept of sigma points, which provide an elegant way to handle nonlinear transformations of probability distributions. Let's understand this step by step.
+
+#### The Core Concept
+
+Think of sigma points as carefully chosen "sampling points" that capture the essential statistical properties of your state estimate. Instead of trying to linearize a nonlinear function like the EKF does, the UKF takes these special points and passes them directly through the nonlinear function.
+
+Imagine you're trying to track a robot that moves in a circular path. Rather than attempting to approximate the curved motion with straight lines (like the EKF would), the UKF selects specific points around your current estimate and sees how they each move along the actual curve.
+
+#### How Sigma Points Work
+
+For a state vector of dimension n, we generate 2n + 1 sigma points. Here's why:
+
+1. One point at the mean of your current state estimate
+2. n points "forward" along each principal direction of your uncertainty
+3. n points "backward" along those same directions
+
+The mathematical formula for generating these points is:
+
+```
+X₀ = x̄                              (center point)
+Xᵢ = x̄ + √((n + λ)P)ᵢ              (forward points, i = 1,...,n)
+Xᵢ₊ₙ = x̄ - √((n + λ)P)ᵢ            (backward points, i = 1,...,n)
+```
+
+Where:
+
+- x̄ is your current state estimate
+- P is your covariance matrix
+- λ is a scaling parameter that helps tune the spread of the points
+- √((n + λ)P) represents the matrix square root of (n + λ)P
+
+#### The Weight System
+
+Each sigma point gets assigned two weights:
+
+1. One for recovering the mean (Wᵐ)
+2. One for recovering the covariance (Wᶜ)
+
+These weights are calculated as:
+
+```
+W₀ᵐ = λ/(n + λ)                     (mean weight for center)
+W₀ᶜ = λ/(n + λ) + (1 - α² + β)      (covariance weight for center)
+Wᵢᵐ = Wᵢᶜ = 1/(2(n + λ))           (weights for other points)
+```
+
+#### A Practical Example
+
+Let's consider tracking a robot with a 2D state vector [position, velocity]. You would:
+
+1. Generate 5 sigma points (2×2 + 1 = 5)
+2. Pass each point through your motion model
+3. Use the weighted sum of transformed points to get your new state estimate
+
+The beauty of this approach is that it:
+
+- Captures nonlinear behavior more accurately than EKF
+- Doesn't require you to calculate any Jacobian matrices
+- Naturally handles strong nonlinearities in your system
+
+#### Parameters and Tuning
+
+Three key parameters control the behavior of sigma points:
+
+- α: Controls spread of points (typically 10⁻⁴ ≤ α ≤ 1)
+- β: Incorporates prior knowledge (β = 2 is optimal for Gaussian distributions)
+- κ: Secondary scaling parameter (usually 0 or 3-n)
+
+Think of α as adjusting how far the sigma points spread from the mean - smaller values keep points closer together, while larger values explore more of the state space.
+
+#### Engineering Insights
+
+As an engineering student, here are key points to remember:
+
+1. The number of sigma points scales linearly with state dimension (2n + 1), making this method computationally tractable for many real-world problems.
+2. The matrix square root computation (usually done via Cholesky decomposition) is the most computationally intensive part.
+3. The method preserves the mean and covariance of your distribution up to the third order (Taylor series expansion) for any nonlinear function.
+
+The UKF's sigma point approach often provides better results than the EKF, especially when:
+
+- Your system has strong nonlinearities
+- You need better consistency in your uncertainty estimates
+- You want to avoid computing Jacobian matrices
+
 ### Unscented transform
 
+The Unscented Transform is a method for estimating how probability distributions change when they go through nonlinear transformations. Think of it as a sophisticated way to answer the question: "If I have a random variable x with a known distribution, and I put it through a nonlinear function y = f(x), what's the distribution of y?"
+
+#### Core Principle
+
+The fundamental insight of the UT is that it's easier to approximate a probability distribution than to approximate an arbitrary nonlinear function. Instead of trying to linearize the nonlinear function (as the EKF does), the UT works by:
+
+1. Choosing a set of specific points (sigma points) that capture the key statistical properties of your input distribution
+2. Passing these points through your nonlinear function
+3. Reconstructing the statistics of the output distribution from the transformed points
+
+#### The Mathematical Framework
+
+Let's say we have a random variable x with mean μ and covariance Σ. The UT proceeds in three key steps:
+
+##### Step 1: Sigma Point Generation
+
+We generate a set of sigma points {Xi} and weights {Wi} using the formulas:
+$$
+X₀ = μ
+Xᵢ = μ + (√((n + λ)Σ))ᵢ
+Xᵢ₊ₙ = μ - (√((n + λ)Σ))ᵢ
+$$
+
+Where:
+
+- n is the dimension of x
+- λ is a scaling parameter
+- (√((n + λ)Σ))ᵢ is the ith column of the matrix square root
+
+##### Step 2: Nonlinear Transformation
+
+Each sigma point is transformed through the nonlinear function:
+
+Yi = f(Xi)
+
+This is where the UT shows its elegance - we're using the actual nonlinear function, not an approximation.
+
+##### Step 3: Statistical Recovery
+
+The mean and covariance of the transformed distribution are approximated by:
+
+$$
+μy = Σᵢ Wᵢᵐ Yᵢ
+Σy = Σᵢ Wᵢᶜ (Yᵢ - μy)(Yᵢ - μy)ᵀ
+$$
+
+#### Properties and Insights
+
+The UT has several remarkable properties that make it powerful for engineering applications:
+
+1. Accuracy: It captures the mean and covariance accurately to the third order (Taylor series) for any nonlinear function. For Gaussian inputs, it's accurate to the fourth order.
+
+2. No Derivatives: Unlike the EKF's linearization, we don't need to calculate any Jacobian matrices. This is particularly valuable when:
+   
+   - Your function isn't easily differentiable
+   - The Jacobian computation is computationally expensive
+   - You're working with discontinuous functions
+
+3. Computational Efficiency: For an n-dimensional state, you only need 2n + 1 sigma points. This makes it practical for real-time applications.
+
+#### A Practical Example
+
+Let's consider a simple nonlinear transformation: converting from polar to Cartesian coordinates.
+
+If we have a point in polar coordinates (r, θ) with some uncertainty, the transformation to Cartesian coordinates is:
+
+$$
+x = r cos(θ)
+y = r sin(θ)
+$$
+
+The EKF would linearize these equations around the mean. The UT instead:
+
+1. Generates sigma points in polar coordinates
+2. Transforms each point using the exact nonlinear equations
+3. Reconstructs the Cartesian statistics from the transformed points
+
+This provides a much better approximation of the true uncertainty, especially when the angular uncertainty is large.
+
+#### Implementation Considerations
+
+When implementing the UT, several practical aspects need attention:
+
+1. Parameter Selection:
+
+   - α controls the spread of sigma points (typically 10⁻⁴ to 1)
+   - β incorporates prior knowledge (β = 2 for Gaussian distributions)
+   - κ helps optimize higher-order moments (often 0 or 3-n)
+
+2. Numerical Stability:
+
+   - Use Cholesky decomposition for the matrix square root
+   - Monitor the condition number of your covariance matrices
+   - Consider using square-root implementations for better numerical properties
+
+
 ### Algorithm implementation
+
+Let's create a detailed implementation of an Unscented Kalman Filter in Python, with comprehensive documentation and example usage.
+
+The key components of this implementation:
+
+#### Core UKF Structure {-}
+
+   - `UKFParameters`: Encapsulates the key parameters (α, β, κ) that control the behavior of the unscented transform
+   - `UnscentedKalmanFilter`: Main filter class implementing the UKF algorithm
+
+#### Key Methods {-}
+
+   - `generate_sigma_points`: Implements the scaled unscented transform to generate sigma points
+   - `predict`: Propagates sigma points through the process model
+   - `update`: Incorporates measurements using the unscented transform
+
+#### Test Scenario {-}
+
+   - Nonlinear tracking problem with range and bearing measurements
+   - Shows how the UKF handles nonlinear measurement models effectively
+
+
+```python
+
+import numpy as np
+from dataclasses import dataclass
+from typing import Optional, Tuple, Callable
+import matplotlib.pyplot as plt
+
+@dataclass
+class UKFParameters:
+    """
+    Parameters for the Unscented Kalman Filter
+    
+    Attributes:
+        alpha: Controls the spread of sigma points (typically 1e-4 to 1)
+        beta: Incorporates prior knowledge (2.0 is optimal for Gaussian)
+        kappa: Secondary scaling parameter (typically 0 or 3-n)
+        n: State dimension
+    """
+    n: int
+    alpha: float = 1e-3
+    beta: float = 2.0
+    kappa: float = 0.0
+    
+    @property
+    def lambda_param(self) -> float:
+        """Calculate lambda parameter for sigma point scaling"""
+        return self.alpha**2 * (self.n + self.kappa) - self.n
+
+class UnscentedKalmanFilter:
+    """
+    Implementation of the Unscented Kalman Filter
+    
+    This implementation uses the scaled unscented transform and supports
+    arbitrary nonlinear process and measurement models.
+    """
+    
+    def __init__(self, dim_x: int, dim_z: int,
+                 process_fn: Callable, measurement_fn: Callable,
+                 alpha: float = 1e-3, beta: float = 2.0, kappa: float = 0.0):
+        """
+        Initialize the UKF
+        
+        Args:
+            dim_x: State dimension
+            dim_z: Measurement dimension
+            process_fn: State transition function f(x, dt)
+            measurement_fn: Measurement function h(x)
+            alpha: Spread parameter
+            beta: Prior knowledge parameter
+            kappa: Secondary scaling parameter
+        """
+        self.dim_x = dim_x
+        self.dim_z = dim_z
+        self.f = process_fn
+        self.h = measurement_fn
+        
+        # Initialize filter parameters
+        self.params = UKFParameters(n=dim_x, alpha=alpha, beta=beta, kappa=kappa)
+        
+        # Initialize state estimate and covariance
+        self.x = np.zeros(dim_x)
+        self.P = np.eye(dim_x)
+        
+        # Initialize noise covariances
+        self.Q = np.eye(dim_x)  # Process noise
+        self.R = np.eye(dim_z)  # Measurement noise
+        
+        # Compute number of sigma points and weights once
+        self.n_sigma = 2 * dim_x + 1
+        self._compute_weights()
+    
+    def _compute_weights(self) -> None:
+        """Compute weights for sigma points"""
+        n = self.dim_x
+        λ = self.params.lambda_param
+        
+        # Weight for mean at center point
+        self.Wm = np.zeros(self.n_sigma)
+        self.Wm[0] = λ / (n + λ)
+        
+        # Weight for covariance at center point
+        self.Wc = np.zeros(self.n_sigma)
+        self.Wc[0] = self.Wm[0] + (1 - self.params.alpha**2 + self.params.beta)
+        
+        # Weights for remaining points
+        weight = 1 / (2 * (n + λ))
+        self.Wm[1:] = weight
+        self.Wc[1:] = weight
+    
+    def generate_sigma_points(self, x: np.ndarray, P: np.ndarray) -> np.ndarray:
+        """
+        Generate sigma points using the scaled unscented transform
+        
+        Args:
+            x: State mean
+            P: State covariance
+            
+        Returns:
+            sigma_points: Array of sigma points (2n+1 x n)
+        """
+        n = self.dim_x
+        λ = self.params.lambda_param
+        
+        # Calculate square root of (n + λ)P using Cholesky decomposition
+        U = np.linalg.cholesky((n + λ) * P)
+        
+        # Initialize sigma points matrix
+        sigma_points = np.zeros((self.n_sigma, n))
+        sigma_points[0] = x
+        
+        # Generate remaining sigma points
+        for i in range(n):
+            sigma_points[i + 1] = x + U[i]
+            sigma_points[n + i + 1] = x - U[i]
+        
+        return sigma_points
+    
+    def predict(self, dt: float) -> None:
+        """
+        Predict step of the UKF
+        
+        Args:
+            dt: Time step
+        """
+        # Generate sigma points
+        sigma_points = self.generate_sigma_points(self.x, self.P)
+        
+        # Transform sigma points through process model
+        transformed_sigmas = np.array([self.f(sigma, dt) for sigma in sigma_points])
+        
+        # Recover mean and covariance
+        self.x = np.sum(self.Wm.reshape(-1, 1) * transformed_sigmas, axis=0)
+        
+        # Calculate covariance of prediction
+        self.P = np.zeros_like(self.P)
+        for i in range(self.n_sigma):
+            diff = (transformed_sigmas[i] - self.x).reshape(-1, 1)
+            self.P += self.Wc[i] * diff @ diff.T
+        
+        # Add process noise
+        self.P += self.Q
+    
+    def update(self, z: np.ndarray) -> None:
+        """
+        Update step of the UKF
+        
+        Args:
+            z: Measurement vector
+        """
+        # Generate sigma points
+        sigma_points = self.generate_sigma_points(self.x, self.P)
+        
+        # Transform sigma points through measurement model
+        transformed_sigmas = np.array([self.h(sigma) for sigma in sigma_points])
+        
+        # Predict measurement
+        z_pred = np.sum(self.Wm.reshape(-1, 1) * transformed_sigmas, axis=0)
+        
+        # Calculate innovation covariance
+        S = np.zeros((self.dim_z, self.dim_z))
+        Pxz = np.zeros((self.dim_x, self.dim_z))
+        
+        for i in range(self.n_sigma):
+            diff_z = (transformed_sigmas[i] - z_pred).reshape(-1, 1)
+            diff_x = (sigma_points[i] - self.x).reshape(-1, 1)
+            
+            S += self.Wc[i] * diff_z @ diff_z.T
+            Pxz += self.Wc[i] * diff_x @ diff_z.T
+        
+        # Add measurement noise
+        S += self.R
+        
+        # Calculate Kalman gain
+        K = Pxz @ np.linalg.inv(S)
+        
+        # Update state and covariance
+        self.x = self.x + K @ (z - z_pred)
+        self.P = self.P - K @ S @ K.T
+
+def test_nonlinear_tracking():
+    """
+    Test the UKF with a nonlinear tracking problem
+    """
+    def process_fn(x, dt):
+        """Nonlinear process model: constant turn rate and velocity"""
+        F = np.array([[1, 0, dt, 0],
+                     [0, 1, 0, dt],
+                     [0, 0, 1, 0],
+                     [0, 0, 0, 1]])
+        return F @ x
+    
+    def measurement_fn(x):
+        """Nonlinear measurement model: range and bearing"""
+        px, py = x[0], x[1]
+        r = np.sqrt(px**2 + py**2)
+        theta = np.arctan2(py, px)
+        return np.array([r, theta])
+    
+    # Initialize UKF
+    ukf = UnscentedKalmanFilter(
+        dim_x=4,  # [px, py, vx, vy]
+        dim_z=2,  # [range, bearing]
+        process_fn=process_fn,
+        measurement_fn=measurement_fn
+    )
+    
+    # Set initial state and covariance
+    ukf.x = np.array([0., 0., 1., 1.])
+    ukf.P *= 0.1
+    
+    # Set noise covariances
+    ukf.Q = np.eye(4) * 0.1  # Process noise
+    ukf.R = np.array([[0.1, 0],   # Measurement noise
+                      [0, 0.01]])
+    
+    # Generate true trajectory and measurements
+    dt = 0.1
+    t = np.arange(0, 10, dt)
+    n_steps = len(t)
+    
+    true_states = np.zeros((n_steps, 4))
+    measurements = np.zeros((n_steps, 2))
+    estimated_states = np.zeros((n_steps, 4))
+    
+    x_true = ukf.x.copy()
+    
+    for k in range(n_steps):
+        # Generate true trajectory
+        x_true = process_fn(x_true, dt) + np.random.multivariate_normal(
+            np.zeros(4), ukf.Q*0.1)
+        true_states[k] = x_true
+        
+        # Generate noisy measurement
+        z_true = measurement_fn(x_true)
+        measurements[k] = z_true + np.random.multivariate_normal(
+            np.zeros(2), ukf.R)
+        
+        # UKF prediction and update
+        ukf.predict(dt)
+        ukf.update(measurements[k])
+        estimated_states[k] = ukf.x
+    
+    # Plot results
+    plt.figure(figsize=(15, 5))
+    
+    # Position track
+    plt.subplot(121)
+    plt.plot(true_states[:, 0], true_states[:, 1], 'b-', label='True')
+    plt.plot(estimated_states[:, 0], estimated_states[:, 1], 'r--', 
+             label='Estimated')
+    plt.scatter(measurements[:, 0] * np.cos(measurements[:, 1]),
+               measurements[:, 0] * np.sin(measurements[:, 1]),
+               c='g', alpha=0.2, label='Measurements')
+    plt.legend()
+    plt.title('Position Track')
+    plt.xlabel('X Position')
+    plt.ylabel('Y Position')
+    plt.grid(True)
+    
+    # Velocity estimates
+    plt.subplot(122)
+    plt.plot(t, true_states[:, 2], 'b-', label='True Vx')
+    plt.plot(t, true_states[:, 3], 'b--', label='True Vy')
+    plt.plot(t, estimated_states[:, 2], 'r-', label='Est Vx')
+    plt.plot(t, estimated_states[:, 3], 'r--', label='Est Vy')
+    plt.legend()
+    plt.title('Velocity Estimates')
+    plt.xlabel('Time')
+    plt.ylabel('Velocity')
+    plt.grid(True)
+    
+    plt.tight_layout()
+    plt.show()
+
+if __name__ == "__main__":
+    test_nonlinear_tracking()
+
+```

@@ -146,10 +146,10 @@ Section to be deleted after completion of the couse
         - [x] Linearization process
         - [x] Jacobian matrices
         - [x] Algorithm implementation
-    - [ ] Unscented Kalman Filter (UKF)
-        - [ ] Sigma points
-        - [ ] Unscented transform
-        - [ ] Algorithm implementation
+    - [-] Unscented Kalman Filter (UKF)
+        - [x] Sigma points
+        - [x] Unscented transform
+        - [x] Algorithm implementation
 - [ ] Particle Filtering
     - [ ] Monte Carlo methods
     - [ ] Importance sampling
